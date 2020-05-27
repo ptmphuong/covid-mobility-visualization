@@ -5,8 +5,8 @@ import datetime
 from pandas.plotting import register_matplotlib_converters
 
 
-country_continent_path = r"C:\programming\mobility\data-in\countryContinent.csv"
-filename = r"C:\programming\mobility\data-in\Global_Mobility_Report.csv"
+# country_continent_path = r"C:\programming\mobility\data-in\countryContinent.csv"
+# filename = r"C:\programming\mobility\data-in\Global_Mobility_Report.csv"
 
 def get_df(filename):    
     df = pd.read_csv(filename)

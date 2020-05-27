@@ -7,12 +7,12 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
  
-country_continent_path = r"C:\programming\mobility\data-in\countryContinent.csv"
-mobility_path = r"C:\programming\mobility\data-in\Global_Mobility_Report.csv"
-ncov_confirmed_path = r"C:\programming\mobility\data-in\time_series_covid_19_confirmed.csv"
-ncov_death_path = r"C:\programming\mobility\data-in\time_series_covid_19_deaths.csv"
-us_ncov_confirmed_path = r"C:\programming\mobility\data-in\time_series_covid_19_confirmed_US.csv"
-us_ncov_death_path = r"C:\programming\mobility\data-in\time_series_covid_19_deaths_US.csv"
+country_continent_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/countryContinent.csv"
+mobility_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/Global_Mobility_Report.csv"
+ncov_confirmed_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_confirmed.csv"
+ncov_death_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_deaths.csv"
+us_ncov_confirmed_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_confirmed_US.csv"
+us_ncov_death_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_deaths_US.csv"
 
 mob_df = pd.read_csv(mobility_path)
 rename_columns = {"country_region_code": "country_code",
