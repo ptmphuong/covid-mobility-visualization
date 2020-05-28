@@ -7,7 +7,7 @@ import dash_html_components as html
 import plotly.graph_objs as go 
 
 
-df_path = "C:\programming\mobility\dfs\combined_df.csv"
+df_path = r"C:\programming\mobility\dfs\combined_df.csv"
 
 df = pd.read_csv(df_path, index_col=0)
 
@@ -17,6 +17,16 @@ category_list = ['retail_and_recreation', 'grocery_and_pharmacy', 'parks', 'tran
 app = dash.Dash()
 
 app.layout = html.Div([
+    # html.Div([
+
+    # ],
+    # style={'width': '40%', 'display': 'inline-block', 'font-size':16, }),     
+
+    html.Div([
+
+        dcc.Graph(id="the-graph")
+    ]),
+
     html.Div([
         dcc.Dropdown(
             id = "my-dropdown",
@@ -27,20 +37,12 @@ app.layout = html.Div([
             # placeholder="SELECT COUNTRY",
             style=dict(
                 width='50%',
-                # horizontalAlign="middle",
-                # verticalAlign="midde",
-                margin=25,
+                horizontalAlign="middle",
+                verticalAlign="midde",
+                margin=30,
                 height="30px",)
-        )
-    ],
-    style={'width': '40%', 'display': 'inline-block', 'font-size':16, }),     
-
-    html.Div([
-
-        dcc.Graph(id="the-graph")
-    ]),
-
-    html.Div([            
+        ),
+                    
         dcc.Checklist(
         id='the-checklist',
         value = [],
@@ -52,7 +54,7 @@ app.layout = html.Div([
                 # width='80%',
                 margin=10,))
         ],
-    style={'padding-left':250, 'width': '80%', 'display': 'inline-block', 'font-size':16,}),
+    style={'padding-left':200, 'width': '80%', 'display': 'inline-block', 'font-size':16,}),
     ])
 
 @app.callback(
@@ -90,7 +92,7 @@ def update_text(selected_country, category):
             width = 1200,
 
             # xaxis=dict(title='Date'),
-            yaxis2=dict(title='Mobility', range=[-200, 200], overlaying='y', side='left', showgrid=False),
+            yaxis2=dict(title='Mobility', range=[-100, 100], overlaying='y', side='left', showgrid=False),
             yaxis=dict(title='Case Counts', side="right"),
 
             margin=dict(t=50),
