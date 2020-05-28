@@ -186,7 +186,7 @@ def plot_mobility(filename, date, action):
         color_list = ["r", "b", "g", "y", "grey", "purple", "orange"]
         for i in range(0, columns):
             axes[i].axhline(0, color='black', linewidth=1.5)
-            axes[i].set_ylim([-100, 200])
+            axes[i].set_ylim([-100, 00])
             line_list = []
             for j in range(len(df_list)):
                 line = axes[i].plot(len(df_list[j]) * [j], df_list[j].iloc[:, i], "o", c=color_list[j], alpha=0.3, label=(to_continent.loc[to_continent["country"]==df_list[j].index[0], ["continent"]].iloc[0].values[0]))
