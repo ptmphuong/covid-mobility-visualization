@@ -1,18 +1,17 @@
 import pandas as pd
 
+import plotly.graph_objs as go 
+import dash_core_components as dcc #combined JS, Py, HTML components
+import dash_html_components as html
 import dash
 from dash.dependencies import Input, Output
-import dash_core_components as dcc #combined JS, Py, HTML components
-import dash_html_components as html 
-import plotly.graph_objs as go 
 
+DF_PATH = r"C:\programming\mobility\dfs\combined_df.csv"
 
-df_path = r"C:\programming\mobility\dfs\combined_df.csv"
+DF = pd.read_csv(DF_PATH, index_col=0)
 
-df = pd.read_csv(df_path, index_col=0)
-
-country_list = df["country"].unique().tolist()
-category_list = ['retail_and_recreation', 'grocery_and_pharmacy', 'parks', 'transit_stations', 'workplaces', 'residential', 'outdoor']
+COUNTRY_LIST = DF["country"].unique().tolist()
+CATEGORY_LIST = ['retail_and_recreation','grocery_and_pharmacy', 'parks', 'transit_stations', 'workplaces', 'residential', 'outdoor']
 
 app = dash.Dash()
 
@@ -23,7 +22,6 @@ app.layout = html.Div([
     # style={'width': '40%', 'display': 'inline-block', 'font-size':16, }),     
 
     html.Div([
-
         dcc.Graph(id="the-graph")
     ]),
 
@@ -31,9 +29,7 @@ app.layout = html.Div([
         dcc.Dropdown(
             id = "my-dropdown",
             value = "United States",
-            options = [
-                {"label": i, "value": i} for i in country_list
-            ],
+            options = [{"label": i, "value": i} for i in COUNTRY_LIST],
             # placeholder="SELECT COUNTRY",
             style=dict(
                 width='50%',
@@ -48,14 +44,15 @@ app.layout = html.Div([
         value = [],
         labelStyle={'display': 'inline-block'},
         options = [
-            {"label":i, "value":i} for i in category_list[:-2]
-        ],
-        style = dict(
-                # width='80%',
-                margin=10,))
+            {"label":i, "value":i} for i in CATEGORY_LIST[:-2]
+            ],
+        style=dict(
+            # width='80%',
+            margin=10,))
         ],
     style={'padding-left':200, 'width': '80%', 'display': 'inline-block', 'font-size':16,}),
-    ])
+        ])
+
 
 @app.callback(
     Output("the-graph", "figure"),
@@ -65,7 +62,7 @@ app.layout = html.Div([
     )
 
 def update_text(selected_country, category):
-    c_df = df[df["country"] == selected_country]
+    c_df = DF[DF["country"] == selected_country]
     
     trace3 = go.Line(x = c_df["date"], y = c_df["residential"], name="residential", line=dict(width=4, color="#E14646"), yaxis="y2")
     trace4 = go.Line(x = c_df["date"], y = c_df["outdoor"], name="outdoor", line=dict(width=4, color="#628A3B"), yaxis="y2")

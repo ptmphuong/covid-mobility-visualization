@@ -8,58 +8,58 @@ from pandas.plotting import register_matplotlib_converters
 country_continent_path = r"C:\programming\mobility\data-in\countryContinent.csv"
 filename = r"C:\programming\mobility\data-in\Global_Mobility_Report.csv"
 
-# def get_df(filename):    
-#     df = pd.read_csv(filename)
-#     rename_columns = {"country_region_code": "country_code",
-#                       "country_region": "country",
-#                       "retail_and_recreation_percent_change_from_baseline": "retail_and_recreation",
-#                       "grocery_and_pharmacy_percent_change_from_baseline": "grocery_and_pharmacy",
-#                       "parks_percent_change_from_baseline": "parks",
-#                       "transit_stations_percent_change_from_baseline": "transit_stations",
-#                       "workplaces_percent_change_from_baseline": "workplaces",
-#                       "residential_percent_change_from_baseline": "residential"}
-#     df = df.rename(columns=rename_columns)
+def get_df(filename):    
+    df = pd.read_csv(filename)
+    rename_columns = {"country_region_code": "country_code",
+                      "country_region": "country",
+                      "retail_and_recreation_percent_change_from_baseline": "retail_and_recreation",
+                      "grocery_and_pharmacy_percent_change_from_baseline": "grocery_and_pharmacy",
+                      "parks_percent_change_from_baseline": "parks",
+                      "transit_stations_percent_change_from_baseline": "transit_stations",
+                      "workplaces_percent_change_from_baseline": "workplaces",
+                      "residential_percent_change_from_baseline": "residential"}
+    df = df.rename(columns=rename_columns)
 
-#     df["outdoor"] = (df["retail_and_recreation"] + df["grocery_and_pharmacy"] + df["parks"] + df["transit_stations"] + df["workplaces"])/5
+    df["outdoor"] = (df["retail_and_recreation"] + df["grocery_and_pharmacy"] + df["parks"] + df["transit_stations"] + df["workplaces"])/5
 
-#     df_country = df[df["sub_region_1"].isnull()]  # get only countries data
-#     df_country["country_code"].fillna("NA", inplace=True) #fix country code for Namibia
+    df_country = df[df["sub_region_1"].isnull()]  # get only countries data
+    df_country["country_code"].fillna("NA", inplace=True) #fix country code for Namibia
 
-#     to_drop_cols = ["sub_region_1", "sub_region_2"]
-#     df_country = df_country.drop(to_drop_cols, axis=1)
+    to_drop_cols = ["sub_region_1", "sub_region_2"]
+    df_country = df_country.drop(to_drop_cols, axis=1)
 
-#     # #drop countries with null values
-#     df_country_na = df_country[pd.isnull(df_country).any(axis=1)]
-#     countries_to_drop = df_country_na["country"].unique().tolist()
+    # #drop countries with null values
+    df_country_na = df_country[pd.isnull(df_country).any(axis=1)]
+    countries_to_drop = df_country_na["country"].unique().tolist()
 
-#     #drop countries not in nCov time series file
-#     more_countries_to_drop = ["Côte d'Ivoire", "Puerto Rico"]
-#     # for c in ["Côte d'Ivoire", "Puerto Rico"]:
-#     #     countries_to_drop.append(c)
+    #drop countries not in nCov time series file
+    more_countries_to_drop = ["Côte d'Ivoire", "Puerto Rico"]
+    # for c in ["Côte d'Ivoire", "Puerto Rico"]:
+    #     countries_to_drop.append(c)
 
-#     df_country = df_country[~df_country["country"].isin(countries_to_drop)]
-#     df_country = df_country[~df_country["country"].isin(more_countries_to_drop)]
+    df_country = df_country[~df_country["country"].isin(countries_to_drop)]
+    df_country = df_country[~df_country["country"].isin(more_countries_to_drop)]
 
  
-#     # #convert date
-#     df_country["date"] = pd.to_datetime(df_country["date"])
+    # #convert date
+    df_country["date"] = pd.to_datetime(df_country["date"])
 
-#     country_continent = pd.read_csv(country_continent_path, encoding="latin-1")
-#     country_continent["code_2"] = np.where(country_continent["country"] == "Namibia", "NA", country_continent["code_2"])
+    country_continent = pd.read_csv(country_continent_path, encoding="latin-1")
+    country_continent["code_2"] = np.where(country_continent["country"] == "Namibia", "NA", country_continent["code_2"])
 
-#     map_continent1 = country_continent[["continent", "code_2"]]
-#     df_country = df_country.merge(map_continent1, left_on="country_code", right_on="code_2", how="left")
-#     df_country = df_country.sort_values(["country", "date"]).reset_index(drop=True)
+    map_continent1 = country_continent[["continent", "code_2"]]
+    df_country = df_country.merge(map_continent1, left_on="country_code", right_on="code_2", how="left")
+    df_country = df_country.sort_values(["country", "date"]).reset_index(drop=True)
 
-#     southeast_asia = ["Brunei", "Myanmar", "Cambodia", "Timor-Leste", "Indonesia", "Taiwan",
-#                       "Laos", "Malaysia", "Philippines", "Singapore", "Thailand", "Vietnam"]
+    southeast_asia = ["Brunei", "Myanmar", "Cambodia", "Timor-Leste", "Indonesia", "Taiwan",
+                      "Laos", "Malaysia", "Philippines", "Singapore", "Thailand", "Vietnam"]
 
-#     df_sea = df_country[df_country["country"].isin(southeast_asia)].drop(["continent", "country_code", "code_2"], axis=1)
-#     df_country = df_country.drop(["continent", "country_code", "code_2"], axis=1)
+    df_sea = df_country[df_country["country"].isin(southeast_asia)].drop(["continent", "country_code", "code_2"], axis=1)
+    df_country = df_country.drop(["continent", "country_code", "code_2"], axis=1)
 
     
 
-#     return df_country, df_sea
+    return df_country, df_sea
 
 # df_country, df_sea = get_df(filename)
 # print(df_sea["country"].unique())
