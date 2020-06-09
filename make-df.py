@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 import random
-# pd.set_option('display.max_rows', 500)
-# pd.set_option('display.max_columns', 500)
-# pd.set_option('display.width', 1000)
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
  
 country_continent_path = r"C:\programming\mobility\data-in\countryContinent.csv"
 mobility_path = r"C:\programming\mobility\data-in\Global_Mobility_Report.csv"
@@ -118,7 +118,9 @@ def make_ncov_df(ncov_df): #simply get country level, drop na, unify formats
     return df
 
 ncov_confirmed_df = make_ncov_df(ncov_confirmed)
+ncov_confirmed_df.to_csv(r"C:\programming\mobility\dfs\confirmed_ncov_df.csv")
 ncov_death_df = make_ncov_df(ncov_death)
+ncov_confirmed_df.to_csv(r"C:\programming\mobility\dfs\confirmed_death_ncov_df.csv")
 
 def chop_ncov_df(ncov_df): #sync dates, and countries with mobility dfs
     df = ncov_df
@@ -130,7 +132,7 @@ def chop_ncov_df(ncov_df): #sync dates, and countries with mobility dfs
             to_correct.append(c)
 
     correct_dict = {}
-    keys = ["Bahamas", "Korea, South", "Burma", "Taiwan*", "US"]
+    keys = ["Burma", "Korea, South", "Taiwan*", "Bahamas", "US"]
     val = to_correct
     for i in range(len(keys)):
         correct_dict[keys[i]] = val[i]
@@ -169,8 +171,8 @@ ncov_c_df = chop_ncov_df(ncov_confirmed_df)
 ncov_d_df = chop_ncov_df(ncov_death_df)
 
 
-ncov_c_df.to_csv(r"C:\programming\mobility\dfs\ncov_c_df.csv")
-ncov_d_df.to_csv(r"C:\programming\mobility\dfs\ncov_d_df.csv")
+# ncov_c_df.to_csv(r"C:\programming\mobility\dfs\ncov_c_df.csv")
+# ncov_d_df.to_csv(r"C:\programming\mobility\dfs\ncov_d_df.csv")
 
 def combined_df(global_mob, ncov_c_df, ncov_d_df):
     def flatten(l):
@@ -222,7 +224,7 @@ def combined_df(global_mob, ncov_c_df, ncov_d_df):
     return global_mob
 
 combined_df = combined_df(global_mob, ncov_c_df, ncov_d_df)
-combined_df.to_csv(r"C:\programming\mobility\dfs\combined_df.csv")
+combined_df.to_csv(r"C:\programming\mobility\dfs\combined_df.csv", index=False)
 
 
 def us_mobility_df():
@@ -240,7 +242,7 @@ def us_mobility_df():
     return us_df
 
 us_mob = us_mobility_df()
-us_mob.to_csv(r"C:\programming\mobility\dfs\us_mobility_df.csv")
+# us_mob.to_csv(r"C:\programming\mobility\dfs\us_mobility_df.csv")
 # print(us_mob.head())
 
 states = us_mob["state"].unique().tolist()
@@ -286,7 +288,7 @@ def us_ncov_df(us_ncov_df): #drop cols, chop states and states
     return gb
 
 us_confirmed_df = us_ncov_df(us_confirmed)
-us_confirmed_df.to_csv(r"C:\programming\mobility\dfs\us_combined.csv")
+# us_confirmed_df.to_csv(r"C:\programming\mobility\dfs\us_combined.csv")
 us_death_df = us_ncov_df(us_death)
 
 def us_combined_df(us_mob, us_confirmed_df, us_death_df):
@@ -319,6 +321,22 @@ def us_combined_df(us_mob, us_confirmed_df, us_death_df):
     return us_mob
 
 us_combined = us_combined_df(us_mob, us_confirmed_df, us_death_df)
-us_combined.to_csv(r"C:\programming\mobility\dfs\us_combined_df.csv")
+us_combined.to_csv(r"C:\programming\mobility\dfs\us_combined_df.csv", index=False)
 print(us_combined.head())
 
+def combined_weekly(combined_df):
+    df = combined_df
+    country_df = []
+    for c in df["country"].unique():
+        kr = df[df['country']==c]
+        w = kr.set_index("date").resample("W").mean().reset_index()
+        kr_w = pd.merge(kr.iloc[:, 0:3], w, on="date")
+        country_df.append(kr_w)
+    merged_df = pd.concat(country_df)
+    return merged_df
+
+combined_weekly = combined_weekly(combined_df)
+combined_weekly.to_csv(r"C:\programming\mobility\dfs\combined_weekly.csv", index=False)
+
+print(combined_weekly.head())
+print(combined_df.head())
