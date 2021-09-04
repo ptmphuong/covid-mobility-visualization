@@ -19,7 +19,7 @@ app.layout = html.Div([
     # style={'width': '40%', 'display': 'inline-block', 'font-size':16, }),     
 
     html.Div([
-        dcc.Graph(id="the-graph")
+        dcc.Graph(id="the-graph", figure={})
     ]),
 
     html.Div([

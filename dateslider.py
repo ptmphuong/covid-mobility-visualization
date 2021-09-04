@@ -138,8 +138,8 @@ def update_figure(selected_date):
     # return fig
 
 
-# if __name__ == '__main__':
-#     a3.run_server(debug=True, port=8050)
+if __name__ == '__main__':
+    a3.run_server(debug=True, port=8050)
 
 for i in range(len(numdate)):
     update_figure(numdate[i])
