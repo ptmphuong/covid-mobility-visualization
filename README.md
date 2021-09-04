@@ -11,16 +11,19 @@ Period: Jan 22, 2020 - June 4, 2020
 
 ## 1. Merging datasets
 
-![](https://github.com/ptmphuong/mobility/blob/master/demo/for-blog/combined_df.png)
+<img src="https://github.com/ptmphuong/mobility/blob/master/demo/for-blog/combined_df.png" width="700">
 
 ## 2. Personal finding
 
-![](https://github.com/ptmphuong/mobility/blob/master/demo/for-blog/most-extremem-date-white-bg.png)
+<img src="https://github.com/ptmphuong/mobility/blob/master/demo/for-blog/most-extremem-date-white-bg.png" width="700">
 
 
 ## 3. Further exploring with interactive charts
 
+![](https://github.com/ptmphuong/mobility/blob/master/demo/gifs/slider-country.gif)
 
-![](https://github.com/ptmphuong/mobility/blob/master/demo/vids/graph1-us.mov)
+![](https://github.com/ptmphuong/mobility/blob/master/demo/gifs/graph3-gif.gif)
+
+
 
 
