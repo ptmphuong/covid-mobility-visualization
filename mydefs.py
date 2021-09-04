@@ -1,12 +1,20 @@
+"""
+
+This program contains helper functions for mobility.ipynb (visualization of findings).
+There are two main groups of helper functions:
+    Query from dataframes (specific country, date, continent, etc)
+    Plot findings with matplotlib.
+
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 from pandas.plotting import register_matplotlib_converters
 
-
-# country_continent_path = r"C:\programming\mobility\data-in\countryContinent.csv"
-# filename = r"C:\programming\mobility\data-in\Global_Mobility_Report.csv"
+country_continent_path = r"data-in\countryContinent.csv"
+filename = r"data-in\Global_Mobility_Report.csv"
 
 def get_df(filename):    
     df = pd.read_csv(filename)
@@ -56,13 +64,7 @@ def get_df(filename):
 
     df_sea = df_country[df_country["country"].isin(southeast_asia)].drop(["continent", "country_code", "code_2"], axis=1)
     df_country = df_country.drop(["continent", "country_code", "code_2"], axis=1)
-
-    
-
     return df_country, df_sea
-
-# df_country, df_sea = get_df(filename)
-# print(df_sea["country"].unique())
 
 
 def get_specific_dates(df, date_ymd):
@@ -72,7 +74,8 @@ def get_specific_dates(df, date_ymd):
              "transit_stations", "workplaces", "outdoor", "residential"]]
     return df
 
-### EXTREMES ###
+
+### Query EXTREMES ###
 
 def top_decrease(df, category):
     df_group = df.groupby("country")[f"{category}"].min().reset_index()
@@ -88,6 +91,7 @@ def top_decrease(df, category):
     df_groupby_day = df_cropped.groupby("date")[f'{category}'].agg(["count", "sum", "mean"]).sort_values("count", ascending=False)
 
     return df_cropped, df_groupby_day
+
 
 def top_increase(df, category):
     df_group = df.groupby("country")[f"{category}"].max().reset_index()
@@ -105,6 +109,7 @@ def top_increase(df, category):
 
     return df_cropped, df_groupby_day
 
+
 def extreme_date(extreme_df):
     extreme_date = extreme_df.groupby("date")["country"].count().sort_values(ascending=False)[:10]
     extreme_date = pd.DataFrame(extreme_date)
@@ -113,7 +118,9 @@ def extreme_date(extreme_df):
     extreme_date["%"] = extreme_date["count"]/count_sum*100
     return extreme_date
 
+
 ### PLOTS ###
+
 
 def plot_mobility(filename, date, action):
 
@@ -218,6 +225,7 @@ def plot_mobility(filename, date, action):
 
     return dot_plot_df(df_list, date, action)
 
+
 def save_all_mobility_plot():
     df_global = get_df(filename)[0] 
     date_list = df_global["date"].unique()
@@ -226,6 +234,7 @@ def save_all_mobility_plot():
         date = str(date)[:10]
         plot_mobility(filename, date, action="save")
         print(f"Date {date} done")
+
 
 # save_all_mobility_plot()
 

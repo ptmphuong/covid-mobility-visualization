@@ -7,7 +7,7 @@ import dash_html_components as html
 import plotly.graph_objs as go 
 
 
-df_path = r"C:\programming\mobility\dfs\us_combined_df.csv"
+df_path = r"dfs\us_combined_df.csv"
 
 df = pd.read_csv(df_path, index_col=0)
 

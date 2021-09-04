@@ -6,7 +6,7 @@ import dash_html_components as html
 import dash
 from dash.dependencies import Input, Output
 
-DF_PATH = r"C:\programming\mobility\dfs\combined_df.csv"
+DF_PATH = r"dfs\combined_df.csv"
 
 DF = pd.read_csv(DF_PATH, index_col=0)
 
@@ -16,9 +16,6 @@ CATEGORY_LIST = ['retail_and_recreation','grocery_and_pharmacy', 'parks', 'trans
 app = dash.Dash()
 
 app.layout = html.Div([
-    # html.Div([
-
-    # ],
     # style={'width': '40%', 'display': 'inline-block', 'font-size':16, }),     
 
     html.Div([

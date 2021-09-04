@@ -1,3 +1,15 @@
+"""
+
+This program cleans and combine 2 datasets:
+    Community Mobility Reports due to COVID-19 from Google
+    COVID-19 Data Repository by CSSE at Johns Hopkins University
+into 1 combined dataframe.
+
+The combined dataframe has Country as the index, so that we could later look into how one countries are moving in regards with their confirmed cases and death due to Covid-19. 
+This dataframe is also further divided into different versions: US only, South East Asia only, Weekly (instead of daily).
+
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,13 +19,15 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
  
-country_continent_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/countryContinent.csv"
-mobility_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/Global_Mobility_Report.csv"
-ncov_confirmed_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_confirmed.csv"
-ncov_death_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_deaths.csv"
-us_ncov_confirmed_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_confirmed_US.csv"
-us_ncov_death_path = r"/Users/jennypham/Desktop/programming/mobility/data-in/time_series_covid_19_deaths_US.csv"
+# import path
+country_continent_path = r"data-in/countryContinent.csv"
+mobility_path = r"data-in/Global_Mobility_Report.csv"
+ncov_confirmed_path = r"data-in/time_series_covid_19_confirmed.csv"
+ncov_death_path = r"data-in/time_series_covid_19_deaths.csv"
+us_ncov_confirmed_path = r"data-in/time_series_covid_19_confirmed_US.csv"
+us_ncov_death_path = r"data-in/time_series_covid_19_deaths_US.csv"
 
+# read dataframes
 mob_df = pd.read_csv(mobility_path)
 rename_columns = {"country_region_code": "country_code",
                       "country_region": "country",
@@ -25,13 +39,12 @@ rename_columns = {"country_region_code": "country_code",
                       "residential_percent_change_from_baseline": "residential"}
 mob_df = mob_df.rename(columns=rename_columns)
 
+# make Mobility dfs: df of all countries and df of south east asian countries
 def mobility_df():  
     df_country = mob_df[mob_df["sub_region_1"].isnull()]  # get only countries data
-    # df_country["outdoor"] = 0
     for i in df_country.index:
         df_country.loc[i, "outdoor"] = (df_country.loc[i, "retail_and_recreation"] + df_country.loc[i, "grocery_and_pharmacy"] + df_country.loc[i, "parks"] + df_country.loc[i, "transit_stations"] + df_country.loc[i, "workplaces"])/5
 
-    # df_country["outdoor"] = (df_country["retail_and_recreation"] + df_country["grocery_and_pharmacy"] + df_country["parks"] + df_country["transit_stations"] + df_country["workplaces"])/5
     df_country["country_code"].fillna("NA", inplace=True) #fix country code for Namibia
 
     to_drop_cols = ["sub_region_1", "sub_region_2"]
@@ -66,20 +79,18 @@ def mobility_df():
     return df_country, df_sea
 
 global_mob, sea_mob = mobility_df()
-# global_mob.to_csv("C:\programming\mobility\dfs\global_mobility_df.csv")
-# sea_mob.to_csv("C:\programming\mobility\dfs\sea_mobility_df.csv")
 
+# get a list of all countries, and periods
 countries = global_mob["country"].unique().tolist()
 first_date = str(global_mob["date"][0].date())
 last_date = str(global_mob["date"][len(global_mob)-1].date())
-
 print(first_date, last_date)
-
 
 ##### ncov #####
 ncov_confirmed = pd.read_csv(ncov_confirmed_path)
 ncov_death = pd.read_csv(ncov_death_path)
 
+# Make ncov data df
 def make_ncov_df(ncov_df): #simply get country level, drop na, unify formats
     df = ncov_df
     to_drop_cols = ["Lat", "Long"]
@@ -118,9 +129,9 @@ def make_ncov_df(ncov_df): #simply get country level, drop na, unify formats
     return df
 
 ncov_confirmed_df = make_ncov_df(ncov_confirmed)
-ncov_confirmed_df.to_csv(r"C:\programming\mobility\dfs\confirmed_ncov_df.csv")
 ncov_death_df = make_ncov_df(ncov_death)
-ncov_confirmed_df.to_csv(r"C:\programming\mobility\dfs\confirmed_death_ncov_df.csv")
+ncov_confirmed_df.to_csv(r"dfs\confirmed_ncov_df.csv")
+ncov_confirmed_df.to_csv(r"dfs\confirmed_death_ncov_df.csv")
 
 def chop_ncov_df(ncov_df): #sync dates, and countries with mobility dfs
     df = ncov_df
@@ -169,10 +180,6 @@ def chop_ncov_df(ncov_df): #sync dates, and countries with mobility dfs
 
 ncov_c_df = chop_ncov_df(ncov_confirmed_df)
 ncov_d_df = chop_ncov_df(ncov_death_df)
-
-
-# ncov_c_df.to_csv(r"C:\programming\mobility\dfs\ncov_c_df.csv")
-# ncov_d_df.to_csv(r"C:\programming\mobility\dfs\ncov_d_df.csv")
 
 def combined_df(global_mob, ncov_c_df, ncov_d_df):
     def flatten(l):
@@ -224,7 +231,7 @@ def combined_df(global_mob, ncov_c_df, ncov_d_df):
     return global_mob
 
 combined_df = combined_df(global_mob, ncov_c_df, ncov_d_df)
-combined_df.to_csv(r"C:\programming\mobility\dfs\combined_df.csv", index=False)
+combined_df.to_csv(r"dfs\combined_df.csv", index=False)
 
 
 def us_mobility_df():
@@ -243,18 +250,16 @@ def us_mobility_df():
 
 us_mob = us_mobility_df()
 # us_mob.to_csv(r"C:\programming\mobility\dfs\us_mobility_df.csv")
-# print(us_mob.head())
 
 states = us_mob["state"].unique().tolist()
-
 us_confirmed = pd.read_csv(us_ncov_confirmed_path)
 us_death = pd.read_csv(us_ncov_death_path)
 
-# print(us_confirmed.head())
 
-for s in us_death["Province_State"].unique():
-    if s not in us_mob["state"].unique():
-        print(s)
+# for s in us_death["Province_State"].unique():
+#     if s not in us_mob["state"].unique():
+#         print(s)
+
 
 def us_ncov_df(us_ncov_df): #drop cols, chop states and states
     df = us_ncov_df
@@ -291,6 +296,7 @@ us_confirmed_df = us_ncov_df(us_confirmed)
 # us_confirmed_df.to_csv(r"C:\programming\mobility\dfs\us_combined.csv")
 us_death_df = us_ncov_df(us_death)
 
+
 def us_combined_df(us_mob, us_confirmed_df, us_death_df):
     def flatten(l):
         flat_l = []
@@ -321,8 +327,9 @@ def us_combined_df(us_mob, us_confirmed_df, us_death_df):
     return us_mob
 
 us_combined = us_combined_df(us_mob, us_confirmed_df, us_death_df)
-us_combined.to_csv(r"C:\programming\mobility\dfs\us_combined_df.csv", index=False)
+us_combined.to_csv(r"dfs\us_combined_df.csv", index=False)
 print(us_combined.head())
+
 
 def combined_weekly(combined_df):
     df = combined_df
@@ -336,7 +343,7 @@ def combined_weekly(combined_df):
     return merged_df
 
 combined_weekly = combined_weekly(combined_df)
-combined_weekly.to_csv(r"C:\programming\mobility\dfs\combined_weekly.csv", index=False)
+combined_weekly.to_csv(r"dfs\combined_weekly.csv", index=False)
 
 print(combined_weekly.head())
 print(combined_df.head())
