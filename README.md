@@ -52,7 +52,7 @@ c. Daily mobility trend and covid-19 cases - US STATE LEVEL
 To run the charts: 
 1. Make sure Python3 is installed.
 2. Install [Plotly Dash](https://dash.plotly.com/installation).
-3. Run the files: dateslider.py (chart a), dropdown.py (chart b), dropdown_us.py (chart c)
+3. Run the files: `dateslider.py` (chart a), `dropdown.py` (chart b), `dropdown_us.py` (chart c)
 
 
 
